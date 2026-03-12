@@ -71,6 +71,22 @@ const coverimageLocalpath = req.files?.coverimage?.[0]?.path
   
 })
  
+const loginUser = asyncHandler(async(req,re) => {
+   // req body-> data
+   // username or email
+   //find the user
+   //password check
+   //access and refresh token
+   // send cookie
+
+   const {email , username, pawword} = req.body
+
+   if(!username || !email){
+    throw new ApiError(400,"username and email is required")
+   }
 
 
-export {registerUser}
+})
+
+
+export {registerUser,loginUser}
