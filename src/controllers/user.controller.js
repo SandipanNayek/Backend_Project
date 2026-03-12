@@ -1,6 +1,6 @@
 import {asyncHandler} from "../utils/asyncHandler.js";
 import {ApiError} from "../utils/ApiError.js"
-import {user} from "../models/user.model.js"
+import {User} from "../models/user.model.js"
 import { uplodCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponsse.js";
 const registerUser = asyncHandler(async(req,res)=>{
@@ -18,14 +18,14 @@ const registerUser = asyncHandler(async(req,res)=>{
   const{fullname, email,username,password } =req.body
 
   console.log("email: ",email)
-
+  console.log("FILES:", req.files)
   if([fullname, email,username,password ].some((field)=>
     field?.trim() ==="")
   ){
      throw new ApiError(400,"all fields are required");  
   }
 
-  const existedUser = user.find({
+  const existedUser =await User.findOne({
     $or:[{username},{email}]
   })
 
@@ -33,21 +33,20 @@ const registerUser = asyncHandler(async(req,res)=>{
     throw new ApiError(409,"user with email or username already exist")
   }
 
-  const avatarLocalpath = req.files.avatar[0]?.path
-  const covarimageLocalpath =req.files.coverimage[0].path
-
+  const avatarLocalpath = req.files?.avatar?.[0]?.path
+const coverimageLocalpath = req.files?.coverimage?.[0]?.path
   if(!avatarLocalpath){
     throw new ApiError(400,"Avatar file is required")
   }
 
   const avatar = await uplodCloudinary(avatarLocalpath)
-  const coverimage = await uplodCloudinary(covarimageLocalpath)
-
+  const coverimage = await uplodCloudinary(coverimageLocalpath)
+  console.log("Cloudinary avatar response:", avatar)
 
   if(!avatar){
      throw new ApiError(400," Avatar is required");
   }
-   const User = await user.create({
+   const user = await User.create({
     fullname,
     avatar:avatar.url,
     coverimage:coverimage?.url || "",
@@ -56,9 +55,10 @@ const registerUser = asyncHandler(async(req,res)=>{
     username:username.toLowerCase()
    })
 
-  const createdUser = await user.findById(User._id).select(
+  const createdUser = await User.findById(user._id).select(
     "-password -refreshToken"
   )
+  
 
   if(!createdUser){
     throw new ApiError(500, "somethig went wrong")
