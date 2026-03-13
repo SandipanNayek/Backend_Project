@@ -113,6 +113,14 @@ const loginUser = asyncHandler(async(req,re) => {
     if(!isPaswswordValid){
       throw new ApiError(401, "Invalid user credentials")
     }
+
+   const {accessToken,refreshToken} = await generateAccessAndRefreshTokens(user._id)
+
+   const loggedInUser = await User.findById(user._id).select(
+    "-password -refreshToken"
+   )
+
+   
 })
 
 
