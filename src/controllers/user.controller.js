@@ -87,7 +87,7 @@ const generateAccessAndRefreshTokens = async(userId) =>{
   }
 }
 
-const loginUser = asyncHandler(async(req,re) => {
+const loginUser = asyncHandler(async(req,res) => {
    // req body-> data
    // username or email
    //find the user
@@ -142,8 +142,29 @@ const loginUser = asyncHandler(async(req,re) => {
 })
 
  const logoutUser = asyncHandler(async(req,res)=>{
-  
+  await User.findByIdAndUpdate(
+    req.user._id,
+     {
+      $set:{
+        refreshToken: undefined
+      }
+    },
+    {
+      new:true
+    }
+   )
+
+   const options = {
+    httpOnly:true,
+    secure: true
+   }
+
+   return res.status(200)
+   .clearCookie("accessToken",accessToken)
+   .clearCookie("refreshToken",refreshToken)
+   .json(new ApiResponse(200,{},"User logged out"))
+
  })
 
 
-export {registerUser,loginUser}
+export {registerUser,loginUser,logoutUser}
