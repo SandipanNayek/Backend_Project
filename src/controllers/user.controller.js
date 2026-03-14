@@ -71,19 +71,25 @@ const coverimageLocalpath = req.files?.coverimage?.[0]?.path
   
 })
  
-const generateAccessAndRefreshTokens = async(userId) =>{
+const generateAccessAndRefreshTokens = async (userId) =>{
   try {
       const user = await User.findById(userId)
-      const accessToken = user.generateRefreshToken()
-      const refreshToken =user.generateAccessToken()
 
-     user.refreshToken=refreshToken
-     await user.save({validateBeforesave: false})
-    
-     return {accessToken,refreshToken}
+      if(!user){
+        throw new ApiError(404,"User not found")
+      }
+
+      const accessToken = user.generateAccessToken()
+      const refreshToken = user.generateRefreshToken()
+
+      user.refreshToken = refreshToken
+      await user.save({ validateBeforeSave:false })
+
+      return {accessToken,refreshToken}
 
   } catch (error) {
-      throw new ApiError(500, "something went wrong when generate refresh and access token")
+      console.log("TOKEN ERROR:", error)  // IMPORTANT
+      throw new ApiError(500,"something went wrong when generate refresh and access token")
   }
 }
 
