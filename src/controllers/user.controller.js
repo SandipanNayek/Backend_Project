@@ -201,7 +201,7 @@ const loginUser = asyncHandler(async(req,res) => {
       secure:true
     }
     
-    const {accessToken,newrefreshToken} =await generateAccessAndRefreshTokens(user._id)
+    const {accessToken,refreshToken:newrefreshToken} =await generateAccessAndRefreshTokens(user._id)
   
     return res
     .status(200)
@@ -243,7 +243,7 @@ const loginUser = asyncHandler(async(req,res) => {
  const getCurrentUser = asyncHandler(async(req,res)=>{
   return res
   .status(200)
-  .json(200,req.user,"current user fetched Successfully")
+  .json(new ApiResponse(200,req.user,"current user fetched Successfully"))
  })
 
   const updateAccountDetails=asyncHandler(async(req,res)=>{
