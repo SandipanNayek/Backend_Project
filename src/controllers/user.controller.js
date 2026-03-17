@@ -273,4 +273,5 @@ export {registerUser,
        logoutUser,
        refreshAccessToken,
        changeCurrentPassword,
-       getCurrentUser}
+       getCurrentUser,
+      updateAccountDetails}
