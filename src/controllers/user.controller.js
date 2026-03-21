@@ -370,13 +370,24 @@ const getUserChannelProfile=asyncHandler(async(req,res)=>{
         channelSubscribedToCount:{
           $size:"$subscriberTo"
         },
-        isSubscribed:{
+       isSubscribed:{
           $cond:{
-            if:{$in:[req.user?._id,"$subscribers.subscriber"]},
-            then:true,
-            else:false
+            if:{
+              $in:[
+              req.user?._id,
+              {
+               $map:{
+               input:"$subscribers",
+                as:"sub",
+               in:"$$sub.subscriber"
           }
         }
+      ]
+    },
+    then:true,
+    else:false
+  }
+}
       }
     },
     {
@@ -405,7 +416,7 @@ const getUserChannelProfile=asyncHandler(async(req,res)=>{
 
   
 
-
+ 
 export {registerUser,
        loginUser,
        logoutUser,
