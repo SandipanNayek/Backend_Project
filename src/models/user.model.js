@@ -30,7 +30,7 @@ const userSchema = new Schema({
     coverimage:{
         type: String,  // cloudinary url
     },
-    watchhitory:[
+    watchhistory:[
         {type:Schema.Types.ObjectId,
         ref:"Video"
     }
