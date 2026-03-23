@@ -262,7 +262,7 @@ const loginUser = asyncHandler(async(req,res) => {
           email:email
          }
       },
-      {new:true}).select("-password")
+      {new:true}).select("-password -refreshToken")
 
       return res
       .status(200)
@@ -409,10 +409,14 @@ const getUserChannelProfile=asyncHandler(async(req,res)=>{
     throw new ApiError(404,"channel does not exist")
   }
    return res
-   .status
-   .json(
-    new ApiResponse(200,channel[0],"User channel fetched Successfully")
-   )
+.status(200)
+.json(
+  new ApiResponse(
+    200,
+    channel[0],
+    "User channel fetched Successfully"
+  )
+)
 })
 
   const getWatchHistory =asyncHandler(async(req,res)=>{
