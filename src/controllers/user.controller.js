@@ -262,7 +262,7 @@ const loginUser = asyncHandler(async(req,res) => {
           email:email
          }
       },
-      {new:true}).select("-password -refreshToken")
+      {new:true}).select("-password -refreshToken");
 
       return res
       .status(200)
