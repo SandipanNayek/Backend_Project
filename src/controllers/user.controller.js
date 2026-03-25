@@ -251,7 +251,7 @@ const loginUser = asyncHandler(async(req,res) => {
     const{fullname,email} = req.body
 
     if(!fullname || !email){
-      throw new ApiError(400,"All fields are required")
+      throw new ApiError(400,"All fields are required!")
     }
 
     const user = await User.findByIdAndUpdate(
